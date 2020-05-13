@@ -33,8 +33,8 @@ public class Car : MonoBehaviour
         Quaternion rotation;
         collider.GetWorldPose(out position, out rotation);
 
-        // visualWheel.transform.position = position;
-        //   visualWheel.transform.rotation = Quaternion.Euler(0, rotation.eulerAngles.x,0);
+      //   visualWheel.transform.position = position;
+         visualWheel.transform.rotation = rotation;
     }
 
     public void Stop()

@@ -60,14 +60,15 @@ public class Car : MonoBehaviour
     {
         if (moving)
         {
-            float motor = 400;
+            float motor = 500;
 
             foreach (AxleInfo axleInfo in axleInfos)
             {
                 if (axleInfo.working)
-                axleInfo.leftWheel.motorTorque = motor;
-                axleInfo.rightWheel.motorTorque = motor;
-
+                { 
+                    axleInfo.leftWheel.motorTorque = motor;
+                    axleInfo.rightWheel.motorTorque = motor;
+                }
 
                 axleInfo.leftWheel.transform.localScale = new Vector3(1, scaling, scaling);
                 axleInfo.rightWheel.transform.localScale = new Vector3(1, scaling, scaling);

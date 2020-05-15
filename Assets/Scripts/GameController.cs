@@ -21,6 +21,7 @@ public class GameController : MonoBehaviour
 
     void Update()
     {
+
         if (winlose == 0 && player.position.z >= finishLine.position.z)
         {
             winlose = 1;

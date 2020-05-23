@@ -121,7 +121,7 @@ namespace VehicleBehaviour {
         public float Steering { get{ return steering; } set{ steering = Mathf.Clamp(value, -1f, 1f); } } 
 
         // When IsPlayer is false you can use this to control the throttle
-        float throttle;
+        float throttle = 1;
         public float Throttle { get{ return throttle; } set{ throttle = Mathf.Clamp(value, -1f, 1f); } } 
 
         // Like your own car handbrake, if it's true the car will not move
@@ -215,7 +215,7 @@ namespace VehicleBehaviour {
             {
                 gasParticle.Play();
                 ParticleSystem.EmissionModule em = gasParticle.emission;
-                em.rateOverTime = handbrake ? 0 : Mathf.Lerp(em.rateOverTime.constant, Mathf.Clamp(150.0f * throttle, 30.0f, 100.0f), 0.1f);
+                em.rateOverTime = (boosting ? 2 : 1) * Mathf.Lerp(em.rateOverTime.constant, Mathf.Clamp(150.0f * throttle, 30.0f, 100.0f), 0.1f);
             }
 
             if (isPlayer && allowBoost) {
@@ -231,11 +231,6 @@ namespace VehicleBehaviour {
 
             // Get all the inputs!
             if (isPlayer) {
-                // Accelerate & brake
-                if (throttleInput != "" && throttleInput != null)
-                {
-                    throttle = GetInput(throttleInput) - GetInput(brakeInput);
-                }
                 // Boost
                 boosting = (GetInput(boostInput) > 0.5f);
                 // Turn
@@ -249,37 +244,17 @@ namespace VehicleBehaviour {
             // Direction
             foreach (WheelCollider wheel in turnWheel)
             {
-                wheel.steerAngle = Mathf.Lerp(wheel.steerAngle, steering, steerSpeed);
+                wheel.steerAngle = 0;
             }
 
             foreach (WheelCollider wheel in wheels)
             {
                 wheel.brakeTorque = 0;
             }
-
-            // Handbrake
-            if (handbrake)
+        
+            foreach (WheelCollider wheel in driveWheel)
             {
-                foreach (WheelCollider wheel in wheels)
-                {
-                    // Don't zero out this value or the wheel completly lock up
-                    wheel.motorTorque = 0.0001f;
-                    wheel.brakeTorque = brakeForce;
-                }
-            }
-            else if (Mathf.Abs(speed) < 4 || Mathf.Sign(speed) == Mathf.Sign(throttle))
-            {
-                foreach (WheelCollider wheel in driveWheel)
-                {
-                    wheel.motorTorque = throttle * motorTorque.Evaluate(speed) * diffGearing / driveWheel.Length;
-                }
-            }
-            else
-            {
-                foreach (WheelCollider wheel in wheels)
-                {
-                    wheel.brakeTorque = Mathf.Abs(throttle) * brakeForce;
-                }
+                wheel.motorTorque = 1000;
             }
 
             // Jump
@@ -318,21 +293,7 @@ namespace VehicleBehaviour {
                 }
             }
 
-            // Drift
-            if (drift && allowDrift) {
-                Vector3 driftForce = -transform.right;
-                driftForce.y = 0.0f;
-                driftForce.Normalize();
-
-                if (steering != 0)
-                    driftForce *= _rb.mass * speed/7f * throttle * steering/steerAngle;
-                Vector3 driftTorque = transform.up * 0.1f * steering/steerAngle;
-
-
-                _rb.AddForce(driftForce * driftIntensity, ForceMode.Force);
-                _rb.AddTorque(driftTorque * driftIntensity, ForceMode.VelocityChange);             
-            }
-            
+           
             // Downforce
             _rb.AddForce(-transform.up * speed * downforce);
         }
@@ -356,12 +317,13 @@ namespace VehicleBehaviour {
         private static MultiOSControls _controls;
 #endif
 
+        private InputUtils.MobileAxisWrapper _wrapper = new InputUtils.MobileAxisWrapper();
         // Use this method if you want to use your own input manager
         private float GetInput(string input) {
 #if MULTIOSCONTROLS
         return MultiOSControls.GetValue(input, playerId);
 #else
-        return Input.GetAxis(input);
+            return _wrapper.GetAxisValue(input);
 #endif
         }
     }

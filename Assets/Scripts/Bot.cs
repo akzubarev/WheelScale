@@ -32,11 +32,12 @@ public class Bot : MonoBehaviour
 
     IEnumerator Optimize(float recomended)
     {
-        float delta = (recomended - GetComponent<Car>().scaling) / 100;
-        while (recomended - GetComponent<Car>().scaling > delta)
+        Debug.Log(recomended);
+        float delta = (recomended - GetComponent<WheelSize>()._scale) / 100;
+        while (recomended - GetComponent<WheelSize>()._scale > delta)
         {
             yield return new WaitForSeconds(0.01f);
-            GetComponent<Car>().scaling += delta;
+            GetComponent<WheelSize>()._scale += delta;
         }
     }
 
@@ -45,6 +46,7 @@ public class Bot : MonoBehaviour
         for (int i = 0; i < trackInfo.Count; i++)
             if (trackInfo[i].zStart > z)
                 return trackInfo[i - 1].recommendedScale;
+           
         return 1;
-        }
+    }
 }

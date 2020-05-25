@@ -25,15 +25,15 @@ public class GameController : MonoBehaviour
         if (winlose == 0 && player.position.z >= finishLine.position.z)
         {
             winlose = 1;
-            player.GetComponent<Car>().Stop();
-            enemy.GetComponent<Car>().Stop();
+        //    player.GetComponent<Car>().Stop();
+         //   enemy.GetComponent<Car>().Stop();
             DisplayWin();
         }
         else if (winlose == 0 && enemy.position.z >= finishLine.position.z)
         {
             winlose = -1;
-            player.GetComponent<Car>().Stop();
-            enemy.GetComponent<Car>().Stop();
+           // player.GetComponent<Car>().Stop();
+           // enemy.GetComponent<Car>().Stop();
             DisplayLose();
         }
     }
@@ -61,26 +61,14 @@ public class GameController : MonoBehaviour
                enemycarposition = new Vector3(enemytrackposition.x, enemytrackposition.y + 1.5f, enemytrackposition.z);
         Instantiate(track, enemytrackposition, Quaternion.identity);
         enemy = Instantiate(enemycar, enemycarposition, Quaternion.identity).transform;
+        enemy.GetComponent< VehicleBehaviour.WheelVehicle >().IsPlayer=false;
+        enemy.gameObject.AddComponent<Bot>();
         enemy.GetComponent<Bot>().trackInfo = trackInfo;
     }
 
 
     public void ResetRace()
     {
-        /*
-        player.position = new Vector3(0, 1.5f, 0);
-        player.localRotation = Quaternion.identity;
-        player.GetComponent<Rigidbody>().inertiaTensorRotation = Quaternion.identity;
-        player.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        player.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-        
-        enemy.position = new Vector3(-10, 1.5f, 0);
-        enemy.localRotation = Quaternion.identity;
-        enemy.GetComponent<Rigidbody>().inertiaTensorRotation = Quaternion.identity;
-        enemy.GetComponent<Rigidbody>().velocity = Vector3.zero;
-        enemy.GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-    */
-     
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 

@@ -60,7 +60,7 @@ public class Car : MonoBehaviour
     {
         if (moving)
         {
-            float motor = 500;
+            float motor = maxMotorTorque/scaling;
 
             foreach (AxleInfo axleInfo in axleInfos)
             {

@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     private Vector3 fp;   //First touch position
     private Vector3 lp;   //Last touch position
 
+    /*
     void FixedUpdate()
     {
         if (Input.touchCount == 1) // user is touching the screen with a single touch
@@ -45,5 +46,12 @@ public class Player : MonoBehaviour
             GetComponent<Car>().scaling = scale;
         }
     }
+    */
+    private InputUtils.MobileAxisWrapper _wrapper = new InputUtils.MobileAxisWrapper();
 
+    private void Update()
+    {
+        float delta = _wrapper.GetAxisValue("Horizontal") * 10 * Time.deltaTime;
+        GetComponent<WheelSize>()._scale = Mathf.Clamp(GetComponent<WheelSize>()._scale + delta, GetComponent<WheelSize>()._minScale, GetComponent<WheelSize>()._maxScale);
+    }
 }

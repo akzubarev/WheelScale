@@ -32,7 +32,6 @@ public class Bot : MonoBehaviour
 
     IEnumerator Optimize(float recomended)
     {
-        Debug.Log(recomended);
         float delta = (recomended - GetComponent<WheelSize>()._scale) / 100;
         while (recomended - GetComponent<WheelSize>()._scale > delta)
         {

@@ -17,7 +17,8 @@ public class GameController : MonoBehaviour
     public GameObject enemycar, track, enemytrack;
     public float maxScale=2f,minScale=0.5f;
     int winlose = 0;
-    public GameObject winlosetext;
+    public GameObject winlosetext, nextlevelbutton;
+    public string nextlevel = "2";
 
     void Update()
     {
@@ -42,6 +43,7 @@ public class GameController : MonoBehaviour
     {
         winlosetext.GetComponent<Text>().text = "You won!";
         winlosetext.SetActive(true);
+        nextlevelbutton.SetActive(true);
     }
 
     void DisplayLose()
@@ -53,6 +55,7 @@ public class GameController : MonoBehaviour
     void Start()
     {
         SpawnSecondTrack();
+        nextlevelbutton.SetActive(false);
     }
 
     void SpawnSecondTrack()
@@ -70,6 +73,11 @@ public class GameController : MonoBehaviour
     public void ResetRace()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+    }
+
+    public void NextLevel()
+    {
+        SceneManager.LoadScene(nextlevel);
     }
 
 }
